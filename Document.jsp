@@ -32,7 +32,9 @@
 
 <script>
 	document.getElementById("doc").contentEditable = true; 
-    function bold() {
+    
+	//bolding function
+	function bold() {
     	var f = document.getElementById("doc").style.fontWeight;
         if(f == 'bold')
         {
@@ -43,6 +45,8 @@
         	document.execCommand('bold');
         }
     }
+    
+    //italicizing function
     function italicize() {
        var f = document.getElementById("doc").style.fontStyle;
         if(f == 'italic')
@@ -54,6 +58,8 @@
         	document.execCommand('italic');
         }
     }
+    
+    //underlining function
     function underline() {
        var f = document.getElementById("doc").style.textDecoration;
         if(f == 'underline')
@@ -66,104 +72,45 @@
         }
     }
     
-    //referenced https://codepen.io/brianmearns/pen/YVjZWw for highlighting words in contenteditable div
+   	//function to change text to code
     function codify() {
-    	const editor = document.getElementById('doc');
-    	var keywords = new Set(["assert","abstract","boolean","break","byte","case","catch","char","class",
-    		"const","continue","default","do","double","else","enum","exports","extends","final","finally",
-    		"float","for","goto","if","implements","import","instaceof","int","interface","long","module",
-    		"native","new","package","private","protected","public","requires","return","short","static",
-    		"strictfp","super","super","switch","synchronized","this","throw","throws","transient",
-    		"try","void","volatile","while","true","false","null","var"]); 
+    	var editor = document.getElementById('doc');
     	
-        function getTextSegments(element) {
-            const textSegments = [];
-            Array.from(element.childNodes).forEach((node) => {
-                switch(node.nodeType) {
-                    case Node.TEXT_NODE:
-                        textSegments.push({text: node.nodeValue, node});
-                        break;
+    	//Set of Java keywords
+    	var keywords = new Set(["assert","abstract","boolean","break","byte","case","catch","char","class",
+    	    		"const","continue","default","do","double","else","enum","exports","extends","final","finally",
+    	    		"float","for","goto","if","implements","import","instaceof","int","interface","long","module",
+    	    		"native","new","package","private","protected","public","requires","return","short","static",
+    	    		"strictfp","super","super","switch","synchronized","this","throw","throws","transient",
+    	    		"try","void","volatile","while","true","false","null","var"]); 
+    	    	
+    	//listens for user input and executes changeColor() function when user types a character
+    	editor.addEventListener("input", changeColor);     
 
-                    case Node.ELEMENT_NODE:
-                        textSegments.splice(textSegments.length, 0, ...(getTextSegments(node)));
-                        break;
-
-                    default:
-                        throw new Error(`Unexpected node type: ${node.nodeType}`);
-                }
-            });
-            return textSegments;
-        }
-
-
-        editor.addEventListener('input', updateEditor);
-
-        function updateEditor() {
-            const sel = window.getSelection();
-            const textSegments = getTextSegments(editor);
-            const textContent = textSegments.map(({text}) => text).join('');
-            let anchorIndex = null;
-            let focusIndex = null;
-            let currentIndex = 0;
-            textSegments.forEach(({text, node}) => {
-                if (node === sel.anchorNode) {
-                    anchorIndex = currentIndex + sel.anchorOffset;
-                }
-                if (node === sel.focusNode) {
-                    focusIndex = currentIndex + sel.focusOffset;
-                }
-                currentIndex += text.length;
-            });
-
-            editor.innerHTML = renderText(textContent);
-
-            restoreSelection(anchorIndex, focusIndex);
-        }
-
-        function restoreSelection(absoluteAnchorIndex, absoluteFocusIndex) {
-            const sel = window.getSelection();
-            const textSegments = getTextSegments(editor);
-
-            let anchorNode = editor;
-            let anchorIndex = 0;
-            let focusNode = editor;
-            let focusIndex = 0;
-            let currentIndex = 0;
-
-            textSegments.forEach(({text, node}) => {
-                const startIndexOfNode = currentIndex;
-                const endIndexOfNode = startIndexOfNode + text.length;
-                if (startIndexOfNode <= absoluteAnchorIndex && absoluteAnchorIndex <= endIndexOfNode) {
-                    anchorNode = node;
-                    anchorIndex = absoluteAnchorIndex - startIndexOfNode;
-                }
-                if (startIndexOfNode <= absoluteFocusIndex && absoluteFocusIndex <= endIndexOfNode) {
-                    focusNode = node;
-                    focusIndex = absoluteFocusIndex - startIndexOfNode;
-                }
-                currentIndex += text.length;
-
-            });
-
-            sel.setBaseAndExtent(anchorNode,anchorIndex,focusNode,focusIndex);
-        }
-
-        function renderText(text) {
-            const words = text.split(/(\s+)/);
-            const output = words.map((word) => {
-            	//find word in set
-                if (keywords.has(word)) {
-                	return '<strong><span style="color:magenta">' + word + '</span></strong>';
-                   // return '<strong><span>${word}</span></strong>';
-                }
-                else {
-                    return word;
-                }
-            })
-            return output.join('');
-        }
-
-        updateEditor();
+    	function changeColor() {
+    		window.onkeydown = function(e){
+    			//if space bar is pressed then select the text before the space bar
+    	    	if(e.keyCode == 32) {
+    	            var range = document.createRange();
+    				range.selectNodeContents(editor);
+    				var s = window.getSelection();
+    				s.removeAllRanges();
+    				s.addRange(range);
+    	            s = s.toString();
+    	            
+    	            //check if selected word is a keyword
+    	            if(keywords.has(s)) {
+    	            	doc.innerHTML = "<strong><span style='color:magenta'>" + s + "</span> </strong>";
+    	            }
+    	            else
+    	            {
+    	            	doc.innerHTML = "<span>" + s + "</span> ";
+    	            }
+		    //move cursor to end of word
+    	            //setCursor();
+    	        }
+    	     }
+    	}
 	}
 </script>
 
