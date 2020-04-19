@@ -19,11 +19,13 @@ public class Server extends HttpServlet {
             throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-         
-        UserDAO userDao = new UserDAO();
+        
+        
+        User user = new User();
          
         try {
-            User user = userDao.checkLogin(email, password);
+        	//if not exist then return null
+            User user = user.checkLogin(email, password);
             String destPage = "login.jsp";
              
             if (user != null) {
