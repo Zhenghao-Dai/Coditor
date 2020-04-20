@@ -24,19 +24,11 @@ public class account
 		
 		
 	}
-	public static void login()
+	public static void login(String username,String password)
 	{
 		/*
 		 * front end stuff
 		 */
-		System.out.print("Account: ");
-		s = new Scanner(System.in);
-		String username = s.nextLine();
-		System.out.print("Password: ");
-		s = new Scanner(System.in);
-		String password = s.nextLine();
-		
-		
 		try
 		{
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user=root&password=q3k82018&useSSL=false&useLagacyDatetimeCode=false&serverTimezone=UTC");
@@ -76,13 +68,9 @@ public class account
 				 * front end stuff
 				 */
 				// see if the password matches
-				while (password.equals(pw_actual) == false)
+				if (password.equals(pw_actual) == false)
 				{
-					
-					System.out.println("Password incorrect");
-					System.out.print("Password: ");
-					s = new Scanner(System.in);
-					password = s.nextLine();
+					return null;
 				}
 				
 				System.out.print("Logged in successfully");
