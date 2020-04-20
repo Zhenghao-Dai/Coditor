@@ -1,4 +1,3 @@
-package coditor;
 
 
 import java.io.*;
@@ -16,8 +15,45 @@ public class LoginServlet extends HttpServlet {
         super();
     }
  
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+		String username = request.getParameter("username");
+        String password = request.getParameter("password");
+  
+        
+        Account user = new Account();
+         
+        //if not exist then return null
+		boolean flag = false;
+		try {
+			flag = user.login(username, password);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String destPage = "login.jsp";
+		 
+		if (flag) {
+		    HttpSession session = request.getSession();
+		    session.setAttribute("user", user);
+		    destPage = "home.jsp";
+		    
+		} else {
+		    String message = "Invalid email/password";
+		    request.setAttribute("message", message);
+		    
+		}
+		
+		
+		//destPage.redirect to 
+		RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
+		dispatcher.forward(request, response);
+	}
+	
+	
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	/*
         String username = request.getParameter("username");
         String password = request.getParameter("password");
   
@@ -43,9 +79,10 @@ public class LoginServlet extends HttpServlet {
 		//destPage.redirect to 
 		RequestDispatcher dispatcher = request.getRequestDispatcher(destPage);
 		dispatcher.forward(request, response);
+		*/
+    	
+    	doGet(request, response);
     }
+    
+    
 }
-
-
-
-

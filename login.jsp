@@ -1,4 +1,3 @@
-  
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -22,7 +21,7 @@
 	if (error == null) {
 		error = "";
 	}
-	String password = (String)request.getAttribute("password");
+	String password = (String)request.getParameter("password");
 	if (password == null) {
 		password = "";
 	}
@@ -55,9 +54,10 @@
 				<div class="center-box">
 					<div class="welcome"><h1>Welcome to <span class="blue-text"> Coditor.</span></h1></div><br />
 					<h2>Login to continue.</h2>
-					<form method="POST" action="login" name="login">
-						<font color="red" <%= error %>></font>
+					<form method="GET" action="login" name="login">
+						
 						<table align="center" style="text-align: left">
+							
 							<tr>
 								<td>Username</td>
 								<td><input type="text" name="username" /></td>
@@ -65,6 +65,7 @@
 							<tr>
 								<td>Password</td>
 								<td><input type="password" name="password" /></td>
+								<font color="red"> <%= error %></font>
 							</tr>
 						</table>
 						<input type="submit" name="submit" value="login" />
