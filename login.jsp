@@ -54,7 +54,7 @@
 				<div class="center-box">
 					<div class="welcome"><h1>Welcome to <span class="blue-text"> Coditor.</span></h1></div><br />
 					<h2>Login to continue.</h2>
-					<form method="GET" action="login" name="login">
+					<form method="POST" action="login" name="login">
 						
 						<table align="center" style="text-align: left">
 							
