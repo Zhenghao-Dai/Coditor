@@ -38,25 +38,27 @@
 				<div class="center-box">
 					<div class="welcome"><h1>Welcome to<span class="blue-text"> Coditor.</span></h1></div><br />
 					<h2>Sign up for free.</h2>
-					<table align="center" style="text-align: left">
-						<tr>
-							<td>First name</td>
-							<td><input type="text" fname="fname"></td>
-						</tr>
-						<tr>
-							<td>Last name</td>
-							<td><input type="text" lname="lname"></td>
-						</tr>
-						<tr>
-							<td>Email</td>
-							<td><input type="email" name="email" /></td>
-						</tr>
-						<tr>
-							<td>Password</td>
-							<td><input type="password" name="password" /></td>
-						</tr>
-					</table>
-					<input type="submit" name="submit" value="Sign up"/>
+					<form method="GET" action="SignUpServlet" name="SignUp">
+						<table align="center" style="text-align: left">
+							<tr>
+								<td>First name</td>
+								<td><input type="text" fname="fname"></td>
+							</tr>
+							<tr>
+								<td>Last name</td>
+								<td><input type="text" lname="lname"></td>
+							</tr>
+							<tr>
+								<td>Email</td>
+								<td><input type="email" name="email" /></td>
+							</tr>
+							<tr>
+								<td>Password</td>
+								<td><input type="password" name="password" /></td>
+							</tr>
+						</table>
+						<input type="submit" name="submit" value="Sign up"/>
+					</form>
 				</div>
 
 			</div>
