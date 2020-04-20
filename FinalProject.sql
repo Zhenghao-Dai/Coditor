@@ -26,11 +26,11 @@ CREATE TABLE Master (
     userID INT(11) NOT NULL
 );
 
-INSERT INTO Document (docID, docName, docHost) 
-	VALUE (0, "testDoc", 0);
+INSERT INTO Document (docName, docHost) 
+	VALUE ("testDoc", 1);
 
-INSERT INTO UserAccount (userID, userEmail, userPW)
-	VALUE (0, "testEmail@gmail.com", "test0_pw");
+INSERT INTO UserAccount (userEmail, userPW)
+	VALUE ("testEmail@gmail.com", "test0_pw");
 
 INSERT INTO Master (docID, userID) 
-	VALUE (0, 0);
+	VALUE (1, 1);
