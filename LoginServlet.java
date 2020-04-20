@@ -17,7 +17,7 @@ public class LoginServlet extends HttpServlet {
  
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = request.getParameter("username");
+        String email = request.getParameter("email");
         String password = request.getParameter("password");
   
         
@@ -26,7 +26,7 @@ public class LoginServlet extends HttpServlet {
         //if not exist then return null
         boolean flag = false;
 		try {
-			flag = user.login(username, password);
+			flag = user.login(email, password);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
