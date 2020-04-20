@@ -1,128 +1,42 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.util.HashSet" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="java.util.Arrays" %>
+<%@ page import="jsyntaxpane.DefaultSyntaxKit" %>
 
 
 <!DOCTYPE html>
 <html>
 
-<style>
-		.editor
-        {
-			border:solid 1px #ccc;
-			padding: 20px;
-			min-height:200px;
-        }
-</style>
+<!-- Include the highlight.js library -->
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/agate.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 
-<body>
+<!-- Include the Quill library -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
-<h1>Document</h1>
+<!-- Include Quill stylesheet -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<link href="highlight.js/monokai-sublime.min.css" rel="stylesheet">
 
-<!-- buttons for changing text -->
-<button onclick="bold()">Bold</button>
-<button onclick="italicize()">Italics</button>
-<button onclick="underline()">Underline</button>
-<button onclick="codify()">Code</button>
+<!-- Create the editor container -->
+<div id="editor">
+</div>
 
-<div class="editor" id="doc">
-	</div>
-
+<!-- Initialize Quill editor -->
 <script>
-	document.getElementById("doc").contentEditable = true; 
-    
-	//bolding function
-	function bold() {
-    	var f = document.getElementById("doc").style.fontWeight;
-        if(f == 'bold')
-        {
-       		document.execCommand('normal');
-        }
-        else
-        {
-        	document.execCommand('bold');
-        }
-    }
-    
-    //italicizing function
-    function italicize() {
-       var f = document.getElementById("doc").style.fontStyle;
-        if(f == 'italic')
-        {
-       		document.execCommand('normal');
-        }
-        else
-        {
-        	document.execCommand('italic');
-        }
-    }
-    
-    //underlining function
-    function underline() {
-       var f = document.getElementById("doc").style.textDecoration;
-        if(f == 'underline')
-        {
-       		document.execCommand('normal');
-        }
-        else
-        {
-        	document.execCommand('underline');
-        }
-    }
-    
-   	//function to change text to code
-    function codify() {
-    	var editor = document.getElementById('doc');
-    	
-    	//Set of Java keywords
-    	var keywords = new Set(["assert","abstract","boolean","break","byte","case","catch","char","class",
-    	    		"const","continue","default","do","double","else","enum","exports","extends","final","finally",
-    	    		"float","for","goto","if","implements","import","instaceof","int","interface","long","module",
-    	    		"native","new","package","private","protected","public","requires","return","short","static",
-    	    		"strictfp","super","super","switch","synchronized","this","throw","throws","transient",
-    	    		"try","void","volatile","while","true","false","null","var"]); 
-    	    	
-    	//listens for user input and executes changeColor() function when user types a character
-    	editor.addEventListener("input", changeColor);     
+var quill = new Quill('#editor', {
+  modules: {
+    syntax: true,              
+    toolbar: [['bold', 'italic','underline', 'code-block']]  
+  },
+  theme: 'snow'
+});
 
-    	function changeColor() {
-    		window.onkeydown = function(e){
-    			//if space bar is pressed then select the text before the space bar
-    	    	if(e.keyCode == 32) {
-    	            var range = document.createRange();
-    				range.selectNodeContents(editor);
-    				var s = window.getSelection();
-    				s.removeAllRanges();
-    				s.addRange(range);
-    	            s = s.toString();
-    	            
-    	            //check if selected word is a keyword
-    	            if(keywords.has(s)) {
-    	            	doc.innerHTML = "<strong><span style='color:magenta'>" + s + "</span> </strong>";
-    	            }
-    	            else
-    	            {
-    	            	doc.innerHTML = "<span>" + s + "</span> ";
-    	            }
-    	            setCursor();
-    	        }
-    	     }
-    	}
-    	
-    	//set cursor to end of most recently typed word
-    	function setCursor() {
-    	    var range = document.createRange();
-    	    var s = window.getSelection();
-    	    range.selectNodeContents(editor);
-    	    range.collapse(false);
-    	    s.removeAllRanges();
-    	    s.addRange(range);
-    	    editor.focus();
-    	}
-	}
 </script>
+<body></body>
 
-</body>
 </html>
+
