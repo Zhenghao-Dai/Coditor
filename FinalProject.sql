@@ -5,7 +5,7 @@ USE FinalProject;
 CREATE TABLE Document (
 	-- DOCUMENT TABLE --
 	-- will hold all the documents and their associated host, documents are identified by ID number, name, and host --
-	docID INT(11) PRIMARY KEY NOT NULL,
+	docID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     docName VARCHAR(50) NOT NULL,
     docHost INT(11) NOT NULL -- host will correspond to ID number --
 ); 
@@ -13,7 +13,7 @@ CREATE TABLE Document (
 CREATE TABLE UserAccount (
 	-- ACCOUNT TABLE --
     -- will hold all user accounts and associated information, hosts identified by ID number, email, and hashed password --
-	userID INT(11) PRIMARY KEY NOT NULL,
+	userID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     userEmail VARCHAR(100) NOT NULL,
     userPW VARCHAR(100) NOT NULL
 );
@@ -28,10 +28,9 @@ CREATE TABLE Master (
 
 INSERT INTO Document (docID, docName, docHost) 
 	VALUE (0, "testDoc", 0);
-            
+
 INSERT INTO UserAccount (userID, userEmail, userPW)
 	VALUE (0, "testEmail@gmail.com", "test0_pw");
 
 INSERT INTO Master (docID, userID) 
 	VALUE (0, 0);
-    
