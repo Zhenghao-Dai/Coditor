@@ -95,12 +95,33 @@ public class Account
 	
 	
 	
-	public static void createAccount(int userID, String userEmail, String userPW)
+	public static void createAccount(int userID, String userEmail, String userPW) throws SQLException
 	{
 		/*
 		 * insert front end stuff here
 		 */
-		Database.addUser(userID, userEmail, userPW);
+		
+		// check if user exists at all
+		ArrayList<String> accounts = new ArrayList<String>();
+		String s1 = "SELECT userEmail FROM UserAccount";
+		ps = conn.prepareStatement(s1);
+		rs = ps.executeQuery(s1);
+		while(rs.next())
+		{
+			accounts.add(rs.getString("userEmail"));
+		}
+		// if user doesn't exist
+		if (accounts.contains(userEmail))
+		{
+			/*
+			 * front end stuff
+			 */
+			System.out.println("User exists already.");
+		}
+		else
+		{
+			Database.addUser(userID, userEmail, userPW);
+		}
 	}
 	
 	
