@@ -106,10 +106,20 @@
     	            {
     	            	doc.innerHTML = "<span>" + s + "</span> ";
     	            }
-		    //move cursor to end of word
-    	            //setCursor();
+    	            setCursor();
     	        }
     	     }
+    	}
+    	
+    	//set cursor to end of most recently typed word
+    	function setCursor() {
+    	    var range = document.createRange();
+    	    var s = window.getSelection();
+    	    range.selectNodeContents(editor);
+    	    range.collapse(false);
+    	    s.removeAllRanges();
+    	    s.addRange(range);
+    	    editor.focus();
     	}
 	}
 </script>
