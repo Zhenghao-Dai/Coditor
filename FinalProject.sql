@@ -14,7 +14,7 @@ CREATE TABLE UserAccount (
 	-- ACCOUNT TABLE --
     -- will hold all user accounts and associated information, hosts identified by ID number, email, and hashed password --
 	userID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    userEmail VARCHAR(100) NOT NULL,
+    userEmail VARCHAR(100) NOT NULL UNIQUE,
     userPW VARCHAR(100) NOT NULL
 );
 
