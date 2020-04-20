@@ -1,3 +1,5 @@
+package coditor;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,7 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class account
+public class Account
 {
 	static Scanner s = new Scanner(System.in);
 	static Connection conn = null; //how you make the connection
@@ -24,7 +26,7 @@ public class account
 		
 		
 	}
-	public static void login(String username,String password)
+	public boolean login(String username,String password)
 	{
 		/*
 		 * front end stuff
@@ -68,12 +70,15 @@ public class account
 				 * front end stuff
 				 */
 				// see if the password matches
-				if (password.equals(pw_actual) == false)
+				if (password.equals(pw_actual))
 				{
-					return null;
+					return true;
+				}
+				else {
+					return false;
 				}
 				
-				System.out.print("Logged in successfully");
+				
 			}
 			
 			
@@ -82,6 +87,7 @@ public class account
 		{
 			System.out.println("Exception in connecting to database: " + sqle.getMessage());
 		}
+		return false;
 	}
 	
 	
