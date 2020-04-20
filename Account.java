@@ -1,3 +1,5 @@
+package coditor;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -24,7 +26,7 @@ public class Account
 		
 		
 	}
-	public boolean login(String username,String password) throws InstantiationException, IllegalAccessException, ClassNotFoundException
+	public boolean login(String username,String password) throws ClassNotFoundException 
 	{
 		/*
 		 * front end stuff
@@ -32,18 +34,18 @@ public class Account
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user=root&password=q3k82018&useSSL=false&useLagacyDatetimeCode=false&serverTimezone=UTC");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user=root&password=q82070002");
 			st = conn.createStatement();
 			
 			
 			// check if user exists at all
 			ArrayList<String> accounts = new ArrayList<String>();
-			String s1 = "SELECT userID FROM UserAccount";
+			String s1 = "SELECT userEmail FROM UserAccount";
 			ps = conn.prepareStatement(s1);
 			rs = ps.executeQuery(s1);
 			while(rs.next())
 			{
-				accounts.add(rs.getString("userID"));
+				accounts.add(rs.getString("userEmail"));
 			}
 			
 			
@@ -57,9 +59,10 @@ public class Account
 			}
 			else
 			{
-				s1 = "SELECT userPW FROM UserAccount WHERE userID = " + username;
+				s1 = "SELECT userPW FROM UserAccount WHERE userEmail = ?";
 				ps = conn.prepareStatement(s1);
-				rs = ps.executeQuery(s1);
+				ps.setString(1,username);
+				rs = ps.executeQuery();
 				
 				rs.next();
 				String pw_actual = rs.getString("userPW");
@@ -92,33 +95,12 @@ public class Account
 	
 	
 	
-	public static void createAccount(int userID, String userEmail, String userPW) throws SQLException
+	public static void createAccount(int userID, String userEmail, String userPW)
 	{
 		/*
 		 * insert front end stuff here
 		 */
-		
-		// check if user exists at all
-		ArrayList<String> accounts = new ArrayList<String>();
-		String s1 = "SELECT userEmail FROM UserAccount";
-		ps = conn.prepareStatement(s1);
-		rs = ps.executeQuery(s1);
-		while(rs.next())
-		{
-			accounts.add(rs.getString("userEmail"));
-		}
-		// if user doesn't exist
-		if (accounts.contains(userEmail))
-		{
-			/*
-			 * front end stuff
-			 */
-			System.out.println("User exists already.");
-		}
-		else
-		{
-			Database.addUser(userID, userEmail, userPW);
-		}
+		Database.addUser(userID, userEmail, userPW);
 	}
 	
 	
