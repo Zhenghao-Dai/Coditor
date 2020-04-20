@@ -37,6 +37,10 @@
 			if (error == null) {
 				error = "";
 			}
+			String uniqueerror = (String)request.getAttribute("uniqueerror");
+			if (uniqueerror == null) {
+				uniqueerror = "";
+			}
 		%>
 
 		<div class="container">
@@ -70,12 +74,13 @@
 						<table align="center" style="text-align: left">
 							<tr>
 								<td>Email</td>
-								<td><input type="email" name="email" /></td>
+								<td><input type="email" name="email" value<%=email%>/></td>
 							</tr>
 							<tr>
 								<td>Password</td>
 								<td><input type="password" name="password" /></td>
 								<font color="red"><%= error %></font>
+								<font color="red"><%= uniqueerror %></font>
 							</tr>
 						</table>
 						<input type="submit" name="submit" value="Sign up"/>
