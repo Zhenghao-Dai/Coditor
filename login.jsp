@@ -1,3 +1,4 @@
+  
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -12,6 +13,20 @@
 	
 
 	<body>
+	<%
+	String username = request.getParameter("username");
+	if( username == null) {
+		username = "";
+	}
+	String error = (String)request.getAttribute("message");
+	if (error == null) {
+		error = "";
+	}
+	String password = (String)request.getAttribute("password");
+	if (password == null) {
+		password = "";
+	}
+	%>
 
 		<div class="container">
 
@@ -40,11 +55,12 @@
 				<div class="center-box">
 					<div class="welcome"><h1>Welcome to <span class="blue-text"> Coditor.</span></h1></div><br />
 					<h2>Login to continue.</h2>
-					<form method="GET" action="LoginServlet" name="login">
+					<form method="POST" action="login" name="login">
+						<font color="red" <%= error %>></font>
 						<table align="center" style="text-align: left">
 							<tr>
-								<td>Email</td>
-								<td><input type="email" name="email" /></td>
+								<td>Username</td>
+								<td><input type="text" name="username" /></td>
 							</tr>
 							<tr>
 								<td>Password</td>
