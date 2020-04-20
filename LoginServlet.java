@@ -18,23 +18,25 @@ public class LoginServlet extends HttpServlet {
  
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String email = request.getParameter("email");
+        String username = request.getParameter("username");
         String password = request.getParameter("password");
-        
+  
         
         Account user = new Account();
          
         //if not exist then return null
-		user = user.login(email, password);
+		boolean flag = user.login(username, password);
 		String destPage = "login.jsp";
 		 
-		if (user != null) {
+		if (flag) {
 		    HttpSession session = request.getSession();
 		    session.setAttribute("user", user);
 		    destPage = "home.jsp";
+		    
 		} else {
 		    String message = "Invalid email/password";
 		    request.setAttribute("message", message);
+		    
 		}
 		
 		
