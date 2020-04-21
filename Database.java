@@ -1,3 +1,5 @@
+package BackEnd;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -5,16 +7,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Vector;
 
 public class Database {
 	static Connection conn = null; //how you make the connection
 	static Statement st = null; //the actual statement
 	static ResultSet rs = null; //what comes back from a select statement
 	static PreparedStatement ps = null; //used to send insert statements to db
+	static Vector<String> UserEmails;
 	
 	public static void main (String [] args) {
-		
+		UserEmails = new Vector<String>();
 		try {
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user=root&password=root");
 			st = conn.createStatement();
@@ -22,33 +27,40 @@ public class Database {
 			System.out.println("Exception in connecting to database: " + sqle.getMessage());
 		}
 		
-		// addUser(1, "insertTest", "badpw");
-		// addDocument(4, "testadd", 1);
-		// addDocument(3, "add2", 1);
-		// addDocument(5, "add3", 1);
-		// removeUser(1);
-		// addUser(32, "testEmail@gmail.com", "1231");	
-		// shareDocument(11, 2);
-		// docExists(4);
-		// docExists(6);
-		// verifyUser(4, 1);
-		// verifyUser(4, 0);
-		// removeDocument(4);
+		addNewUser("abc@gmail.com", "password1");
+		addNewUser("123456@gmail.com", "password1");
+		addNewUser("ivanpeng@gmail.com", "password1");
+		addNewUser("xyz@gmail.com", "password 32");
+//		System.out.println(getUserID("abc@gmail.com"));
+		createNewDocument("testDoc 1", getUserID("abc@gmail.com"));
+		createNewDocument("testDoc 2", getUserID("123456@gmail.com"));
+		createNewDocument("testDoc 3", getUserID("ivanpeng@gmail.com"));
+		createNewDocument("testDoc 4", getUserID("xyz@gmail.com"));
+		removeUser("xyz@gmail.com");
+		removeDocument("testDoc 3");
+	} 
+	
+	public static void addNewUser(String userEmail, String userPW) {
+			String insert_pw = hashed(userPW);
+			char ch = '"';
+			String s1 = "INSERT INTO UserAccount (userEmail, userPW) VALUES (" + ch + userEmail + ch + ", " + ch + insert_pw + ch + ");";
+			
+			try {
+				ps = conn.prepareStatement(s1);
+				ps.execute();
+			} catch (SQLException e) {
+				System.err.println("Error adding user: " + e.getMessage());
+			}
+			if (!userExists(userEmail))
+				UserEmails.add(userEmail);
 	}
 	
-	public static void addUser(int userID, String userEmail, String userPW) {
-		String insert_pw = hashed(userPW);
-		char ch = '"';
-		String s1 = "INSERT INTO UserAccount (userID, userEmail, userPW) VALUES (" + userID + ", " + ch + userEmail + ch + ", " + ch + insert_pw + ch + ");";
-		try {
-			ps = conn.prepareStatement(s1);
-			ps.execute();
-		} catch (SQLException e) {
-			System.out.println("Error adding user: " + e.getMessage());
-		}	
-	}
-	
-	public static void removeUser(int userID) { //deletes user from all shared databases, also deletes all documents that this user is the host of 
+	//deletes user from all shared databases, also deletes all documents that this user is the host of
+	public static void removeUser(String email) {
+		if (!userExists(email))
+			return;
+		
+		int userID = getUserID(email);
 		List<Integer> removeDocs = new ArrayList<Integer>();
 		try {
 			rs = st.executeQuery("SELECT docID FROM Document WHERE docHOST = " + userID);
@@ -81,30 +93,32 @@ public class Database {
 		} catch (SQLException sqle) {
 			System.out.println("Error in removing a user: " + sqle.getMessage());
 		}
-		
 	}
 	
 	public static String hashed(String pw) { //function to hash the given password		
 		return pw;
 	}
 	
-	public static void addDocument(int docID, String docName, int docHost) {
+	public static void createNewDocument(String docName, int docHost) {
 		char ch = '"';
-		String s1 = "INSERT INTO Document (docID, docName, docHost) VALUES (" + docID + ", " + ch + docName + ch + ", " + docHost + ");";
-		String s2 = "INSERT INTO Master (docID, userID) VALUES (" + docID + "," + docHost + ");";
+		
 		try {
+			String s1 = "INSERT INTO Document (docName, docHost) VALUES (" + ch + docName + ch + ", " + docHost + ");";
 			ps = conn.prepareStatement(s1);
 			ps.execute();
 			
+			int docID = getDocID(docName);
+			String s2 = "INSERT INTO Master (docID, userID) VALUES (" + docID + "," + docHost + ");";
 			ps = conn.prepareStatement(s2);
 			ps.execute();
 		} catch (SQLException e) {
 			System.out.println("Error adding document: " + e.getMessage());
 		}
 	}
-
-	public static void removeDocument(int docID) { //deletes a single document, removes it from all shared users' drives
+	
+	public static void removeDocument(String docName) { //deletes a single document, removes it from all shared users' drives
 		try {
+			int docID = getDocID(docName);
 			if (docExists(docID)) {
 				String r = "DELETE FROM Document WHERE docID =" + docID + ";";
 				ps = conn.prepareStatement(r);
@@ -122,7 +136,10 @@ public class Database {
 		}
 	}
 	
-	public static void shareDocument(int docID, int userID) {//adds specified user to list of valid users for a particular document
+	//adds specified user to list of valid users for a particular document
+	public static void shareDocument(String docName, String email) {
+		int docID = getDocID(docName);
+		int userID = getUserID(email);
 		String s = "INSERT INTO Master (docID, userID) VALUES (" + docID + "," + userID + ");";
 		try {
 			ps = conn.prepareStatement(s);
@@ -132,7 +149,9 @@ public class Database {
 		}
 	}
 	
-	public static boolean verifyUser(int docID, int userID) { //checks whether or not this user has access to a document
+	public static boolean verifyUserDocAccess(String docName, String email) { //checks whether or not this user has access to a document
+		int docID = getDocID(docName);
+		int userID = getUserID(email);
 		try {
 			rs = st.executeQuery("SELECT docID FROM Master WHERE userID =" + userID);
 			while (rs.next()) {
@@ -169,6 +188,48 @@ public class Database {
 		}
 		System.err.println("Document " + DocID + " not found!");
 		return false;
+	}
+	
+	private static boolean userExists(String email) {
+		Collections.sort(UserEmails);
+		if (Collections.binarySearch(UserEmails, email) >= 0)
+			return true;
+		else {
+//			System.err.println("User with email: " + email + " does not exist!");
+			return false;
+		}
+	}
+	
+	private static int getUserID(String email) {
+		try {
+			char ch = '"';
+			rs = st.executeQuery("SELECT userID FROM UserAccount WHERE userEmail = " + ch + email + ch);
+			while (rs.next()) {
+				String temp = rs.getString("userID");
+				return Integer.parseInt(temp);
+			}
+		} catch (NumberFormatException e) {
+			System.err.println ("NumberFormatException in docExists(): " + e.getMessage());
+		} catch (SQLException e) {
+			System.err.println ("SQLException in getUserID(): " + e.getMessage());
+		}
+		return -1;
+	}
+	
+	private static int getDocID(String docName) {
+		try {
+			char ch = '"';
+			rs = st.executeQuery("SELECT docID FROM Document WHERE docName = " + ch + docName + ch);
+			while (rs.next()) {
+				String temp = rs.getString("docID");
+				return Integer.parseInt(temp);
+			}
+		} catch (NumberFormatException e) {
+			System.err.println ("NumberFormatException in docExists(): " + e.getMessage());
+		} catch (SQLException e) {
+			System.err.println ("SQLException in getDocID(): " + e.getMessage());
+		}
+		return -1;
 	}
 	
 	public void databaseUseComplete() { //only use when we are completely done and ready to close database connection
