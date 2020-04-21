@@ -1,4 +1,4 @@
-package BackEnd;
+package coditor;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,17 +17,20 @@ public class Database {
 	static ResultSet rs = null; //what comes back from a select statement
 	static PreparedStatement ps = null; //used to send insert statements to db
 	static Vector<String> UserEmails;
+	static String databaseUserName = "root";
+	static String databasePasswordString = "q82070002";
+	
 	
 	public static void main (String [] args) {
 		UserEmails = new Vector<String>();
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user=root&password=root");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString);
 			st = conn.createStatement();
 		} catch (SQLException sqle) {
 			System.out.println("Exception in connecting to database: " + sqle.getMessage());
 		}
 		
-		addNewUser("abc@gmail.com", "password1");
+		addNewUser("abc@gmail.com", "test");
 		addNewUser("123456@gmail.com", "password1");
 		addNewUser("ivanpeng@gmail.com", "password1");
 		addNewUser("xyz@gmail.com", "password 32");
@@ -40,7 +43,22 @@ public class Database {
 		removeDocument("testDoc 3");
 	} 
 	
-	public static void addNewUser(String userEmail, String userPW) {
+	public static boolean addNewUser(String userEmail, String userPW) {
+		UserEmails = new Vector<String>();
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString);
+			st = conn.createStatement();
+		} catch (SQLException sqle) {
+			System.out.println("Exception in connecting to database: " + sqle.getMessage());
+			return false;
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
 			String insert_pw = hashed(userPW);
 			char ch = '"';
 			String s1 = "INSERT INTO UserAccount (userEmail, userPW) VALUES (" + ch + userEmail + ch + ", " + ch + insert_pw + ch + ");";
@@ -50,9 +68,12 @@ public class Database {
 				ps.execute();
 			} catch (SQLException e) {
 				System.err.println("Error adding user: " + e.getMessage());
+				return false;
 			}
 			if (!userExists(userEmail))
 				UserEmails.add(userEmail);
+			
+			return true;
 	}
 	
 	//deletes user from all shared databases, also deletes all documents that this user is the host of

@@ -1,6 +1,7 @@
 package coditor;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -22,29 +23,20 @@ public class SignupServlet extends HttpServlet{
             throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-  
         
-        Account user = new Account();
-         
-        //if not exist then return null
         boolean flag = false;
-		try {
-			flag = user.login(email, password);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-		}
-		String destPage = "login.jsp";
+			flag = Account.createAccount(email, password);
+		
+        
+        
+		String destPage = "registration.jsp";
 		 
 		if (flag) {
-		    HttpSession session = request.getSession();
-		    session.setAttribute("user", user);
-		    destPage = "home.jsp";
+		    destPage = "login.jsp";
 		    
 		} else {
-		    String message = "Invalid email/password";
-		    request.setAttribute("message", message);
-		    
+		    String message = "Email existed.";
+		    request.setAttribute("error", message);
 		}
 		
 		
