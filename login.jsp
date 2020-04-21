@@ -40,10 +40,10 @@
 
                 <div class="right-side">
                 	<div class="nav-link-wrapper active-nav-link">
-                   		<a href="login.html">Login</a>
+                   		<a href="login.jsp">Login</a>
                 	</div>
 	                <div class="nav-link-wrapper">
-	                    <a href="registration.html">Sign up</a>
+	                    <a href="registration.jsp">Sign up</a>
 	                </div>
             	</div>
 
