@@ -55,10 +55,10 @@
 
                 <div class="right-side">
                 	<div class="nav-link-wrapper">
-                   		<a href="login.html">Login</a>
+                   		<a href="login.jsp">Login</a>
                 	</div>
 	                <div class="nav-link-wrapper active-nav-link">
-	                    <a href="registration.html">Sign up</a>
+	                    <a href="registration.jsp">Sign up</a>
 	                </div>
             	</div>
 
@@ -69,7 +69,7 @@
 				<div class="center-box">
 					<div class="welcome"><h1>Welcome to<span class="blue-text"> Coditor.</span></h1></div><br />
 					<h2>Sign up for free.</h2>
-					<form method="GET" action="SignUpServlet" name="SignUp" onsubmit="return validate()">
+					<form method="POST" action="signup" name="SignUp" onsubmit="return validate()">
 						<div id="errormessage"></div>
 						<table align="center" style="text-align: left">
 							<tr>
