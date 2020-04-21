@@ -1,3 +1,4 @@
+
 package coditor;
 
 import java.sql.Connection;
@@ -23,6 +24,8 @@ public class Account
 	{
 		// login();
 		// guestAccess(0);
+		
+			createAccount("dsahda@gmail.com", "123");
 		
 		
 	}
@@ -95,36 +98,9 @@ public class Account
 	
 	
 	
-	public static void createAccount(int userID, String userEmail, String userPW) throws SQLException
+	public static boolean createAccount( String userEmail, String userPW) 
 	{
-		/*
-		 * insert front end stuff here
-		 */
-		
-		// check if user exists at all
-		ArrayList<String> accounts = new ArrayList<String>();
-		String s1 = "SELECT userEmail FROM UserAccount";
-		ps = conn.prepareStatement(s1);
-		ps.setString(1,username);
-		rs = ps.executeQuery();
-		
-		
-		while(rs.next())
-		{
-			accounts.add(rs.getString("userEmail"));
-		}
-		// if user doesn't exist
-		if (accounts.contains(userEmail))
-		{
-			/*
-			 * front end stuff
-			 */
-			System.out.println("User exists already.");
-		}
-		else
-		{
-			Database.addUser(userID, userEmail, userPW);
-		}
+		return Database.addNewUser(userEmail, userPW);
 	}
 	
 	
@@ -150,7 +126,7 @@ public class Account
 			ArrayList<String> accounts = new ArrayList<String>();
 			String s1 = "SELECT userEmail FROM Master WHERE docID = " + docID;
 			ps = conn.prepareStatement(s1);
-			ps.setString(1,username);
+			//ps.setString(1,username);
 			rs = ps.executeQuery();
 			
 			while(rs.next())
@@ -181,3 +157,4 @@ public class Account
 	
 	
 }
+
