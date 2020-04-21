@@ -105,7 +105,10 @@ public class Account
 		ArrayList<String> accounts = new ArrayList<String>();
 		String s1 = "SELECT userEmail FROM UserAccount";
 		ps = conn.prepareStatement(s1);
-		rs = ps.executeQuery(s1);
+		ps.setString(1,username);
+		rs = ps.executeQuery();
+		
+		
 		while(rs.next())
 		{
 			accounts.add(rs.getString("userEmail"));
@@ -145,12 +148,14 @@ public class Account
 			
 			// check if user exists at all
 			ArrayList<String> accounts = new ArrayList<String>();
-			String s1 = "SELECT userID FROM Master WHERE docID = " + docID;
+			String s1 = "SELECT userEmail FROM Master WHERE docID = " + docID;
 			ps = conn.prepareStatement(s1);
-			rs = ps.executeQuery(s1);
+			ps.setString(1,username);
+			rs = ps.executeQuery();
+			
 			while(rs.next())
 			{
-				accounts.add(rs.getString("userID"));
+				accounts.add(rs.getString("userEmail"));
 			}
 			
 			/*
