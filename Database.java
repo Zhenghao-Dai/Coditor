@@ -18,7 +18,7 @@ public class Database {
 	static PreparedStatement ps = null; //used to send insert statements to db
 	static Vector<String> UserEmails;
 	static String databaseUserName = "root";
-	static String databasePasswordString = "q82070002";
+	static String databasePasswordString = "pw";
 	
 	
 	public static void main (String [] args) {
