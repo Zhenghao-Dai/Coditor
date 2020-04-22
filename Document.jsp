@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="jsyntaxpane.DefaultSyntaxKit" %>
 
 
 <!DOCTYPE html>
@@ -27,16 +26,46 @@
 
 <!-- Initialize Quill editor -->
 <script>
-var quill = new Quill('#editor', {
-  modules: {
-    syntax: true,              
-    toolbar: [['bold', 'italic','underline', 'code-block']]  
-  },
-  theme: 'snow'
-});
-
+	var Delta = Quill.import('delta');
+	var quill = new Quill('#editor', {
+	  modules: {
+	    syntax: true,              
+	    toolbar: [['bold', 'italic','underline', 'code-block']]  
+	  },
+	  placeholder: 'Enter text here',
+	  theme: 'snow'
+	});
+	
+	//Store accumulated changes
+	var change = new Delta();
+	quill.on('text-change', function(delta) {
+	  change = change.compose(delta);
+	});
+	
+	// Save periodically
+	// destination locations for both set to redirect back to Document.jsp bc we don't want it to leave after saving 
+	setInterval(function() {
+	  if (change.length() > 0) {
+	    console.log('Saving changes', change);
+	    $.post('/Document.jsp', { 
+	      partial: JSON.stringify(change) 
+	    });
+	    
+	    $.post('/Document.jsp', { 
+	      doc: JSON.stringify(quill.getContents())
+	    });
+	    
+	    change = new Delta();
+	  }
+	}, 5*1000);
+	
+	// Check for unsaved data
+	window.onbeforeunload = function() {
+	  if (change.length() > 0) {
+	    return 'There are unsaved changes. Are you sure you want to leave?';
+	  }
+	}
 </script>
 <body></body>
 
 </html>
-
