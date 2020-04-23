@@ -59,8 +59,8 @@
 						<table align="center" style="text-align: left">
 							
 							<tr>
-								<td>Username</td>
-								<td><input type="text" name="username" /></td>
+								<td>Email</td>
+								<td><input type="email" name="email" /></td>
 							</tr>
 							<tr>
 								<td>Password</td>
