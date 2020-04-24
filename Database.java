@@ -1,4 +1,4 @@
-package BackEnd;
+package backend;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -26,7 +26,7 @@ public class Database {
 		UserEmails = new Vector<String>();
 		DocTags = new Vector<Integer>();
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString);
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString + "&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC");
 			st = conn.createStatement();
 		} catch (SQLException sqle) {
 			System.out.println("Exception in connecting to database: " + sqle.getMessage());
@@ -55,6 +55,7 @@ public class Database {
 //		getUsersDocNames("ivanpeng@gmail.com");
 //		getUsersOwnedDocIDs("ivanpeng@gmail.com");	
 //		getUsersOwnedDocNames("ivanpeng@gmail.com");
+		
 	} 
 	
 	public static boolean addNewUser(String userEmail, String userPW) {
@@ -84,6 +85,8 @@ public class Database {
 		int userID = getUserID(email);
 		List<Integer> removeDocs = new ArrayList<Integer>();
 		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString);
+			st = conn.createStatement();
 			rs = st.executeQuery("SELECT docID FROM Document WHERE docHOST = " + userID);
 			java.sql.ResultSetMetaData rsmd = rs.getMetaData();
 			int columnsNumber = rsmd.getColumnCount();
@@ -155,6 +158,7 @@ public class Database {
 			return false;
 		}
 		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString + "&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC");
 			String s1 = "INSERT INTO Document (docTag, docName, docHost) VALUES (" + docTag + ", " + ch + docName + ch + ", " + docHost + ");";
 			ps = conn.prepareStatement(s1);
 			ps.execute();
@@ -172,6 +176,7 @@ public class Database {
 	
 	public static boolean removeDocument(String docName) { //deletes a single document, removes it from all shared users' drives
 		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString + "&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC");
 			int docID = getDocID(docName);
 			if (docExists(docID)) {
 				String r = "DELETE FROM Document WHERE docID =" + docID + ";";
@@ -199,6 +204,7 @@ public class Database {
 		int userID = getUserID(email);
 		String s = "INSERT INTO Master (docID, userID) VALUES (" + docID + "," + userID + ");";
 		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString + "&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC");
 			ps = conn.prepareStatement(s);
 			ps.execute();
 		} catch (SQLException sqle) {
@@ -212,6 +218,8 @@ public class Database {
 		int docID = getDocID(docName);
 		int userID = getUserID(email);
 		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString + "&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC");
+			st = conn.createStatement();
 			rs = st.executeQuery("SELECT docID FROM Master WHERE userID =" + userID);
 			while (rs.next()) {
 				String temp = rs.getString("docID");
@@ -231,6 +239,8 @@ public class Database {
 
 	private static boolean docExists(int DocID) {
 		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString + "&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC");
+			st = conn.createStatement();
 			rs = st.executeQuery("SELECT docID FROM Document");
 			while (rs.next()) {
 				String temp = rs.getString("docID");
@@ -258,8 +268,14 @@ public class Database {
 	}
 	
 	private static int getUserID(String email) {
+		System.out.println("getUserID email: " + email);
 		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString  + "&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC");
+			st = conn.createStatement();
 			char ch = '"';
+			if (st == null) {
+				System.out.println("st is null");
+			}
 			rs = st.executeQuery("SELECT userID FROM UserAccount WHERE userEmail = " + ch + email + ch);
 			while (rs.next()) {
 				String temp = rs.getString("userID");
@@ -275,6 +291,8 @@ public class Database {
 	
 	private static int getDocID(String docName) {
 		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString  + "&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC");
+			st = conn.createStatement();
 			char ch = '"';
 			rs = st.executeQuery("SELECT docID FROM Document WHERE docName = " + ch + docName + ch);
 			while (rs.next()) {
@@ -290,10 +308,12 @@ public class Database {
 	}
 	
 	// returns vector of docIDs of documents that specified userEmail has access to 
-	private static Vector<Integer> getUsersDocIDs(String userEmail) { 
+	static Vector<Integer> getUsersDocIDs(String userEmail) { 
 		int userID = getUserID(userEmail);
 		Vector<Integer> v = new Vector<Integer>();
 		try { 
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString  + "&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC");
+			st = conn.createStatement();
 			rs = st.executeQuery("SELECT docID FROM Master WHERE userID = " + userID);
 			while (rs.next()) {
 				String temp = rs.getString("docID");
@@ -308,7 +328,7 @@ public class Database {
 	}
 	
 	// returns vector of docNames of documents that specified userEmail has access to 
-	private static Vector<String> getUsersDocNames(String userEmail) {
+	static Vector<String> getUsersDocNames(String userEmail) {
 		Vector<String> docNames = new Vector<String>();
 		Vector<Integer> docIDs = new Vector<Integer>();
 		try { 
@@ -328,11 +348,12 @@ public class Database {
 	}
 	
 	// returns vector of docIDs of documents that specified userEmail owns
-	private static Vector<Integer> getUsersOwnedDocIDs(String userEmail) { 
+	static Vector<Integer> getUsersOwnedDocIDs(String userEmail) { 
 		int userID = getUserID(userEmail);
 		Vector<Integer> v = new Vector<Integer>();
 		try { 
-
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString  + "&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC");
+			st = conn.createStatement();
 			rs = st.executeQuery("SELECT docID FROM Document WHERE docHost = " + userID);
 			while (rs.next()) {
 				String temp = rs.getString("docID");
@@ -347,10 +368,12 @@ public class Database {
 	}
 		
 	// returns vector of docNames of documents that specified userEmail owns 
-	private static Vector<String> getUsersOwnedDocNames(String userEmail) {
+	static Vector<String> getUsersOwnedDocNames(String userEmail) {
 		Vector<String> docNames = new Vector<String>();
 		Vector<Integer> docIDs = new Vector<Integer>();
 		try { 
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString  + "&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC");
+			st = conn.createStatement();
 			docIDs = getUsersOwnedDocIDs(userEmail);
 			for (int i = 0; i < docIDs.size(); i++) {
 				rs = st.executeQuery("SELECT docName FROM Document WHERE docID = " + docIDs.get(i));
