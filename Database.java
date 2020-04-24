@@ -40,7 +40,7 @@ public class Database {
 //		addNewUser("123456@gmail.com", "password1");
 //		addNewUser("ivanpeng@gmail.com", "password1");
 //		addNewUser("xyz@gmail.com", "password 32");
-////		System.out.println(getUserID("abc@gmail.com"));
+//		System.out.println(getUserID("abc@gmail.com"));
 //		createNewDocument("testDoc 1", getUserID("abc@gmail.com"));
 //		createNewDocument("testDoc 2", getUserID("123456@gmail.com"));
 //		createNewDocument("testDoc 3", getUserID("ivanpeng@gmail.com"));
@@ -51,12 +51,10 @@ public class Database {
 //		shareDocument("testDoc 4", "ivanpeng@gmail.com");
 //		shareDocument("testDoc 4", "123456@gmail.com");
 //		shareDocument("testDoc 4", "abc@gmail.com");
-////		removeUser("xyz@gmail.com");
-////		removeDocument("testDoc 3");
-////		printDocTags();
-////		printUserEmails();
-//		getUsersDocs(1);
-//		getAllOwnedDocs(4);
+//		getUsersDocIDs("ivanpeng@gmail.com");	
+//		getUsersDocNames("ivanpeng@gmail.com");
+//		getUsersOwnedDocIDs("ivanpeng@gmail.com");	
+//		getUsersOwnedDocNames("ivanpeng@gmail.com");
 	} 
 	
 	public static boolean addNewUser(String userEmail, String userPW) {
@@ -139,15 +137,15 @@ public class Database {
 		return tag;
 	}
 	
-	private static void printDocTags() {
-		for (int i = 0; i < DocTags.size(); i++)
-			System.out.println(DocTags.get(i));
-	}
-	
-	private static void printUserEmails() {
-		for (int i = 0; i < UserEmails.size(); i++)
-			System.out.println(UserEmails.get(i));
-	}
+//	private static void printDocTags() {
+//		for (int i = 0; i < DocTags.size(); i++)
+//			System.out.println(DocTags.get(i));
+//	}
+//	
+//	private static void printUserEmails() {
+//		for (int i = 0; i < UserEmails.size(); i++)
+//			System.out.println(UserEmails.get(i));
+//	}
 	
 	public static boolean createNewDocument(String docName, int docHost) {
 		char ch = '"';
@@ -291,10 +289,11 @@ public class Database {
 		return -1;
 	}
 	
-	private static Vector<Integer> getUsersDocs(int userID) {
+	// returns vector of docIDs of documents that specified userEmail has access to 
+	private static Vector<Integer> getUsersDocIDs(String userEmail) { 
+		int userID = getUserID(userEmail);
 		Vector<Integer> v = new Vector<Integer>();
 		try { 
-			char ch = '"';
 			rs = st.executeQuery("SELECT docID FROM Master WHERE userID = " + userID);
 			while (rs.next()) {
 				String temp = rs.getString("docID");
@@ -305,19 +304,35 @@ public class Database {
 		} catch (SQLException e) {
 			System.err.println ("SQLException in getUsersDoc(): " + e.getMessage());
 		}
-		printUsersDocs(v);
 		return v;
 	}
 	
-	private static void printUsersDocs(Vector<Integer> v) {
-		for (int i = 0; i < v.size(); i++)
-			System.out.println(v.get(i));
+	// returns vector of docNames of documents that specified userEmail has access to 
+	private static Vector<String> getUsersDocNames(String userEmail) {
+		Vector<String> docNames = new Vector<String>();
+		Vector<Integer> docIDs = new Vector<Integer>();
+		try { 
+			docIDs = getUsersDocIDs(userEmail);
+			for (int i = 0; i < docIDs.size(); i++) {
+				rs = st.executeQuery("SELECT docName FROM Document WHERE docID = " + docIDs.get(i));
+				while (rs.next()) {
+					docNames.add(rs.getString("docName"));
+				}
+			}
+		} catch (NumberFormatException e) {
+			System.err.println ("NumberFormatException in docExists(): " + e.getMessage());
+		} catch (SQLException e) {
+			System.err.println ("SQLException in getUsersDoc(): " + e.getMessage());
+		}
+		return docNames;
 	}
 	
-	private static Vector<Integer> getAllOwnedDocs(int userID) {
+	// returns vector of docIDs of documents that specified userEmail owns
+	private static Vector<Integer> getUsersOwnedDocIDs(String userEmail) { 
+		int userID = getUserID(userEmail);
 		Vector<Integer> v = new Vector<Integer>();
 		try { 
-			char ch = '"';
+
 			rs = st.executeQuery("SELECT docID FROM Document WHERE docHost = " + userID);
 			while (rs.next()) {
 				String temp = rs.getString("docID");
@@ -326,16 +341,30 @@ public class Database {
 		} catch (NumberFormatException e) {
 			System.err.println ("NumberFormatException in docExists(): " + e.getMessage());
 		} catch (SQLException e) {
-			System.err.println ("SQLException in getAllOwnedDocs(): " + e.getMessage());
+			System.err.println ("SQLException in getUsersDoc(): " + e.getMessage());
 		}
-		printOwnedDocs(v);
 		return v;
 	}
-	
-	private static void printOwnedDocs(Vector<Integer> v) {
-		for (int i = 0; i < v.size(); i++)
-			System.out.println(v.get(i));
-	} 
+		
+	// returns vector of docNames of documents that specified userEmail owns 
+	private static Vector<String> getUsersOwnedDocNames(String userEmail) {
+		Vector<String> docNames = new Vector<String>();
+		Vector<Integer> docIDs = new Vector<Integer>();
+		try { 
+			docIDs = getUsersOwnedDocIDs(userEmail);
+			for (int i = 0; i < docIDs.size(); i++) {
+				rs = st.executeQuery("SELECT docName FROM Document WHERE docID = " + docIDs.get(i));
+				while (rs.next()) {
+					docNames.add(rs.getString("docName"));
+				}
+			}
+		} catch (NumberFormatException e) {
+			System.err.println ("NumberFormatException in docExists(): " + e.getMessage());
+		} catch (SQLException e) {
+			System.err.println ("SQLException in getUsersDoc(): " + e.getMessage());
+		}
+		return docNames;
+	}
 	
 	public boolean databaseUseComplete() { //only use when we are completely done and ready to close database connection
 		try {
