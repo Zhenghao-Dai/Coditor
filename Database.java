@@ -152,14 +152,9 @@ public class Database {
 	
 	public static boolean createNewDocument(String docName, int docHost) {
 		char ch = '"';
-		int docTag = generateDocTag();
-		if (docTag == -1) {
-			System.err.println("Ran out of docTags!");
-			return false;
-		}
 		try {
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString + "&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC");
-			String s1 = "INSERT INTO Document (docTag, docName, docHost) VALUES (" + docTag + ", " + ch + docName + ch + ", " + docHost + ");";
+			String s1 = "INSERT INTO Document (docName, docHost) VALUES (" + ch + docName + ch + ", " + docHost + ");";
 			ps = conn.prepareStatement(s1);
 			ps.execute();
 			
@@ -267,7 +262,7 @@ public class Database {
 
 	}
 	
-	private static int getUserID(String email) {
+	static int getUserID(String email) {
 		System.out.println("getUserID email: " + email);
 		try {
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString  + "&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC");
@@ -289,7 +284,7 @@ public class Database {
 		return -1;
 	}
 	
-	private static int getDocID(String docName) {
+	static int getDocID(String docName) {
 		try {
 			conn = DriverManager.getConnection("jdbc:mysql://localhost/FinalProject?user="+databaseUserName+"&password="+databasePasswordString  + "&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC");
 			st = conn.createStatement();

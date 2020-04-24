@@ -28,11 +28,14 @@
 	            </div>
 
                 <div class="right-side">
-                	<div class="nav-link-wrapper active-nav-link">
-                   		<a href="drive.html">Drive</a>
+                	<div class="nav-link-wrapper">
+                   		<a href="createdoc.jsp">Create New Doc</a>
+                	</div>
+                	<div class="nav-link-wrapper">
+                   		<a href="deletedoc.jsp">Delete Doc</a>
                 	</div>
 	                <div class="nav-link-wrapper">
-	                    <a href="login.html">Sign out</a>
+	                    <a href="logout">logout</a>
 	                </div>
             	</div>
 
@@ -67,21 +70,26 @@
 							 <%  
 							 }
 							 %>
-						</div>
+						</div> <!-- my docs tab -->
 
 						<div id="shared" class="tabcontent">
 							<!-- <p>Our notes</p> -->
 							<%
 							Vector<String> sharedDocs = (Vector<String>)session.getAttribute("sharedDocs");
-							Vector<String> sharedDocsID = (Vector<String>)session.getAttribute("sharedDocsID");
+							Vector<Integer> sharedDocsID = (Vector<Integer>)session.getAttribute("sharedDocsID");
 							for (int i=0; i<sharedDocs.size(); i++) {
-							
+								String sharedName = sharedDocs.get(i);
+								int sharedID = sharedDocsID.get(i);
+							%>
+								<div class="one-doc">
+							 		<a href="DocumentServlet?docName=<%=sharedName%>&docID=<%=sharedID%>">
+							 			<p><%= sharedName %></p>
+							 		</a>
+							 	</div> <!-- one-doc -->
+							<%
 							}
 							%>
-							<%
-							
-							%>
-						</div>
+						</div> <!-- shared tab -->
 
 						<script>
 							function openTab(evt, tabName) {
@@ -102,11 +110,11 @@
 					</div> <!-- docs -->
 
 
-				</div>
+				</div> <!-- center-box -->
 
-			</div>
+			</div> <!-- content-wrapper -->
 
-		</div>
+		</div> <!-- container -->
 
 	</body>
 </html> 
