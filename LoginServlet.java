@@ -36,7 +36,7 @@ public class LoginServlet extends HttpServlet {
 		if (flag) {
 		    HttpSession session = request.getSession();
 		    session.setAttribute("user", user);
-		    destPage = "home.jsp";
+		    destPage = "DriveServlet";
 		    
 		} else {
 		    String message = "Invalid email/password";
