@@ -7,7 +7,8 @@ CREATE TABLE Document (
 	-- will hold all the documents and their associated host, documents are identified by ID number, name, and host --
 	docID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     docName VARCHAR(50) NOT NULL,
-    docHost INT(11) NOT NULL -- host will correspond to ID number --
+    docHost INT(11) NOT NULL, -- host will correspond to ID number --
+    content TEXT(4294967295) NOT NULL
 ); 
 
 CREATE TABLE UserAccount (
@@ -26,11 +27,5 @@ CREATE TABLE Master (
     userID INT(11) NOT NULL
 );
 
-INSERT INTO Document (docName, docHost) 
-	VALUE ("testDoc", 1);
-
 INSERT INTO UserAccount (userEmail, userPW)
-	VALUE ("testEmail@gmail.com", "test0_pw");
-
-INSERT INTO Master (docID, userID) 
-	VALUE (1, 1);
+	VALUE ("test@gmail.com", "test");
