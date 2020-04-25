@@ -5,7 +5,7 @@ USE FinalProject;
 CREATE TABLE Document (
 	-- DOCUMENT TABLE --
 	-- will hold all the documents and their associated host, documents are identified by ID number, name, and host --
-	docID INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	docID INT(11) NOT NULL,
     docName VARCHAR(50) NOT NULL,
     docHost INT(11) NOT NULL, -- host will correspond to ID number --
     content TEXT(4294967295) NOT NULL
