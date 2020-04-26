@@ -15,7 +15,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class SendEmail {
-	public static void SendEmail(String destEmail,String docID) throws AddressException, MessagingException {
+	public static void SendEmail(String destEmail,String docName, String docID) throws AddressException, MessagingException {
 		// TODO code application logic here
         Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
         final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
@@ -43,13 +43,10 @@ public class SendEmail {
         msg.setRecipients(Message.RecipientType.TO,
                 InternetAddress.parse(destEmail, false));
         msg.setSubject("Coditor Share Link");
-        msg.setText("Someone share the coditor with you! Link is: " );
+        msg.setText("Someone share the coditor with you! Link is: localhost:8079/CS201FP/guestshare?docName="+docName+"&docID="+docID);
         msg.setSentDate(new Date());
         Transport.send(msg);
 
         System.out.println("Message sent.");
 	}
-    public static void main(String[] args){
-        
-    }
 }
