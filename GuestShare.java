@@ -23,10 +23,9 @@ public class GuestShare extends HttpServlet {
  
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String email = request.getParameter("docId");
-        String password = request.getParameter("password");
-        
-		String destPage = "doc.jsp";
+        	String docID = request.getParameter("docID");
+        	response.setAttribute("docId",docID)
+		String destPage = "guestdoc.jsp";
 		//Set div = innerhtml
 		
 		//destPage.redirect to 
