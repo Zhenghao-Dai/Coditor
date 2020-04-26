@@ -1,0 +1,157 @@
+@charset "UTF-8";
+
+body {
+    margin: 0px;
+    font-family: 'Lato', sans-serif;
+    font-family: 'Poppins', sans-serif;
+}
+
+.blue-text {
+	color: blue;
+}
+
+.white-text {
+	color: white;
+}
+
+.welcome {
+	border-bottom: 1px solid blue;
+}
+
+/* NAV BAR STYLES */
+.nav-wrapper {
+    display: flex;
+    justify-content: space-between; 
+    padding: 35px;
+}
+
+.right-side {
+    display: flex;
+}
+
+.nav-wrapper > .right-side > div {
+    margin-right: 20px;
+    font-size: 0.9em;
+    text-transform: uppercase; 
+}
+
+.nav-right-wrapper {
+    height: 22px;
+    border-bottom: 1px solid transparent;
+    transition: border-bottom 0.5s;
+}
+
+.middle {
+	display: flex;
+	text-align: center;
+}
+
+.nav-wrapper > .middle > div {
+	margin-right: 20px;
+    font-size: 0.9em;
+    text-transform: uppercase; 
+}
+
+.nav-link-wrapper a {
+    color: #8a8a8a;
+    text-decoration: none;
+    transition: color 0.5s;
+}
+
+.nav-link-wrapper:hover {
+    border-bottom: 1px solid blue;
+}
+
+.nav-link-wrapper a:hover {
+    color: blue;
+}
+
+.nav-wrapper > .left-side > div {
+    font-size: 1.2em;
+    text-transform: uppercase;
+}
+
+.active-nav-link {
+	border-bottom: 1px solid blue;
+}
+
+.active-nav-link a {
+    color: blue !important;
+}
+
+/* login/signup */
+.content-wrapper {
+	text-align: center;
+}
+
+.center-box {
+	background-color: white;
+}
+
+input[type=submit]{
+  background-color: white;
+  border: 1px solid blue;
+  padding: 10px 95px;
+  color:  black;
+  font-family: 'Lato', sans-serif;
+  text-decoration: none;
+  margin: 25px 2px;
+  cursor: pointer;
+}
+
+/* drive */
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: none;
+  background-color: white;
+}
+
+.tablinks {
+	font-family: 'Lato', sans-serif;
+	color: black; 
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: white;
+  float: center;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+  font-color: blue;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  border-bottom: 1px solid blue;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+	border-bottom: 1px solid blue;
+  color: blue !important;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+/* Doc */
+.icon {
+	width: 30px;
+ 	height: 30px;
+  	border-radius: 50%;
+  	font-size: 20px;
+  	color: white;
+  	line-height: 30px;
+  	text-align: center;
+  	background: blue;
+}
