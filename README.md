@@ -8,7 +8,7 @@
 5. Create a Dynamic Web Project in Eclipse with any name
 6. Import unzipped Coditor project file into newly created Dynamic Web Project
 7. Change variable databasePasswordString and databaseUserName in Database.java to your SQL username and password 
-8. Run on `login.jsp` tomcat server
+8. Run `login.jsp` on Tomcat v9.0 server
 
 **Working Functionality**
 1) 	User Login/Sign Up/Logout
